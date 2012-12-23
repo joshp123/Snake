@@ -78,8 +78,8 @@ namespace Snake
 
         public struct CoordinateVector
         {
-            Coordinate direction;
-            int magnitude;
+            public Coordinate direction;
+            public int magnitude;
 
             public CoordinateVector(Coordinate direction, int magnitude)
             {
@@ -88,9 +88,9 @@ namespace Snake
             }
 
 
-            private void TurnLeft()
+            public void TurnLeft()
             {
-                if (this.direction.x != -1)
+                if (this.direction.x == 0)
                 {
                     this.direction.x = -1;
                     this.direction.y = 0;
@@ -98,9 +98,9 @@ namespace Snake
                 return;
             }
 
-            private void TurnRight()
+            public void TurnRight()
             {
-                if (this.direction.x != 1)
+                if (this.direction.x == 0)
                 {
                     this.direction.x = 1;
                     this.direction.y = 0;
@@ -108,21 +108,22 @@ namespace Snake
                 return;
             }
 
-            private void TurnUp()
+            public void TurnUp()
             {
-                if (this.direction.y != 1)
-                {
-                    this.direction.x = 0;
-                    this.direction.y = 1;
-                }
-            }
-
-            private void TurnDown()
-            {
-                if (this.direction.x != -1)
+                if (this.direction.y == 0)
                 {
                     this.direction.x = 0;
                     this.direction.y = -1;
+                    // its -1 because 0,0 is top left not bottom left
+                }
+            }
+
+            public void TurnDown()
+            {
+                if (this.direction.y == 0)
+                {
+                    this.direction.x = 0;
+                    this.direction.y = 1;
                 }
             }
 
@@ -146,7 +147,7 @@ namespace Snake
             DrawScreen(walls, snake, food);
 
             // start the snake moving
-            CoordinateVector veloctity = new CoordinateVector(new Coordinate(1,0), 1);
+            CoordinateVector velocity = new CoordinateVector(new Coordinate(1,0), 1);
             // start snake moving in the +x direction, w/speed 1
 
             // nb before fucking with speed implement out of bounds checks
