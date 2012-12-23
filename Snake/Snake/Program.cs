@@ -143,7 +143,8 @@ namespace Snake
             walls = InititialiseWalls(screen_size);
             
             food = new Coordinate(10,10); // make random food constructor soon. make it an object i guess
-
+            Random random = new Random();
+            
             DrawScreen(walls, snake, food);
 
             // start the snake moving
@@ -155,7 +156,7 @@ namespace Snake
             int time = 0;
             // BEWARE OF INT32 WRAPAROUND BUGS HERE LOL
 
-            while (time < 30)
+            while (true)
             // move snake perpetually unless we break out of loop
             {
                 DrawScreen(walls, snake, food);
@@ -169,24 +170,76 @@ namespace Snake
                     velocity.TurnDown();
                 else if (input.Key == ConsoleKey.UpArrow)
                     velocity.TurnUp();
-                
+
+
+                Coordinate temp = snake[0];
                 snake[0] = snake[0] + (velocity.direction * velocity.magnitude);
+
                 // if hit wall, break
+
+                if (walls.Contains(snake[0]))
+                {
+                    //replace this with a huge GAME OVER message lol
+                    Console.Beep();
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Beep();
+                    Console.Clear();
+                    Console.WriteLine("Game over! You hit the wall.");
+                    break;
+                }
+
+                if (snake.GetRange(1,snake.Count -1).Contains(snake[0]))
+                {
+                    //replace this with a huge GAME OVER message lol
+                    Console.Beep();
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Beep();
+                    Console.Clear();
+                    Console.WriteLine("Game over! You hit yourself.");
+                    break;
+                }
 
                 // if hit food, eat food, length++ (i.e. new coord at last point) snake.add(snake[snake.length-1]) after rest of snake moves
 
-                // move rest of snake
-                for (int i = snake.Count - 1; i > 1; i--)
+                if (snake[0] == food)
                 {
-                    // loop backwards along snake moving each coord forward
-                    snake[i] = snake[i - 1];
+                    food.x = random.Next(1,screen_size.x);
+                    food.y = random.Next(1,screen_size.y);
+                    if (snake.Count == 1)
+                    {
+                        snake.Add(snake[0] - velocity.direction);
+                    }
+                    else
+                    {
+                        snake.Add(snake[snake.Count - 1]);
+                        // increase length by 1
+                        for (int i = snake.Count - 2; i > 1; i--)
+                        {
+                            // loop backwards along snake moving each coord forward
+                            // since it's eaten, last point on snake stays same
+                            snake[i] = snake[i - 1];
+                        }
+                        if (snake.Count > 1)
+                            snake[1] = temp;
+                        // set snake[1] to what snake 1 was, not what it is now. only if snake[1] exists tho
+                    }
                 }
+                else
+                {
+                    // move rest of snake
 
+                    for (int i = snake.Count - 1; i > 1; i--)
+                    {
+                        // loop backwards along snake moving each coord forward
+                        snake[i] = snake[i - 1];
+                    }
+                    if (snake.Count > 1)
+                        snake[1] = temp;
 
+                    // set snake[1] to what snake 1 was, not what it is now. only if snake[1] exists tho
 
-
-
-                System.Threading.Thread.Sleep(500);
+                }
+                //System.Threading.Thread.Sleep(500);
                 time++;
                 // each time unit is 0.5s
 
