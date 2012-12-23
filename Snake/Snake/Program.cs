@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+// ill use this when i replace all my complicated structs with actual .net ones laffo
 
 namespace Snake
 {
@@ -91,8 +92,8 @@ namespace Snake
             {
                 if (this.direction.x != -1)
                 {
-                    this.direction.x == -1;
-                    this.direction.y == 0;
+                    this.direction.x = -1;
+                    this.direction.y = 0;
                 }
                 return;
             }
@@ -101,8 +102,8 @@ namespace Snake
             {
                 if (this.direction.x != 1)
                 {
-                    this.direction.x == 1;
-                    this.direction.y == 0;
+                    this.direction.x = 1;
+                    this.direction.y = 0;
                 }
                 return;
             }
@@ -111,8 +112,8 @@ namespace Snake
             {
                 if (this.direction.y != 1)
                 {
-                    this.direction.x == 0;
-                    this.direction.y == 1;
+                    this.direction.x = 0;
+                    this.direction.y = 1;
                 }
             }
 
@@ -120,8 +121,8 @@ namespace Snake
             {
                 if (this.direction.x != -1)
                 {
-                    this.direction.x == 0;
-                    this.direction.y == -1;
+                    this.direction.x = 0;
+                    this.direction.y = -1;
                 }
             }
 
@@ -145,8 +146,11 @@ namespace Snake
             DrawScreen(walls, snake, food);
 
             // start the snake moving
-            CoordinateVector veloctity = new CoordinateVector(1,0); // start snake moving in the +x direction, w/speed 1
+            CoordinateVector veloctity = new CoordinateVector(new Coordinate(1,0), 1);
+            // start snake moving in the +x direction, w/speed 1
+
             // nb before fucking with speed implement out of bounds checks
+
             int time = 0;
             // BEWARE OF INT32 WRAPAROUND BUGS HERE LOL
 
