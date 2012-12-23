@@ -17,6 +17,8 @@ namespace Snake
                 y = ycoord;
             }
 
+            // i got a bit carried away implementing all this dumb shit but it taught me how to do it so i guess it was worthwhile
+
             public static Coordinate operator + (Coordinate a, Coordinate b)
             {
                 return new Coordinate(a.x + b.x, a.y + b.y);
@@ -34,6 +36,42 @@ namespace Snake
                 return new Coordinate(a.x - b.x, a.y - b.y);
             }
 
+            public static bool operator == (Coordinate a, Coordinate b)
+            {
+                if ((a.x == b.x) && (a.y == b.y))
+                    return true;
+                else
+                    return false;
+            }
+
+            public static bool operator != (Coordinate a, Coordinate b)
+            {
+                if (a == b)
+                    return false;
+                else
+                    return true;
+            }
+
+            public bool Equals(Coordinate a)
+            {
+                if ((a.x == this.x) && (a.y == this.y))
+                    return true;
+                else
+                    return false;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Coordinate)) return false;
+                return base.Equals(obj);
+            }
+            // i don't really know what this does but oh well
+
+            public override int GetHashCode()
+            {
+                return this.GetHashCode();
+            }
+
         }
         
         static void Main(string[] args)
@@ -49,18 +87,29 @@ namespace Snake
             // start the snake moving
             Coordinate motion_direction = new Coordinate(1,0); // start snake moving in the +x direction, w/speed 1
             // nb before fucking with speed implement out of bounds checks
+            int time = 0;
+            // BEWARE OF INT32 WRAPAROUND BUGS HERE LOL
 
             while (true)
             // move snake perpetually unless we break out of loop
             {
+                DrawScreen(walls, snake, food);
+
                 snake[0] = snake[0] + motion_direction;
                 // if hit wall, break
+
                 // if hit food, eat food, length++ (i.e. new coord at last point) snake.add(snake[snake.length-1]) after rest of snake moves
+                
                 // move rest of snake
-                for (int i = 1; i < snake.Count(); i++)
-			    {
-			        
+                for (int i = snake.Count - 1; i > 1; i--)
+                {
+                    // loop backwards along snake moving each coord forward
+                    snake[i] = snake[i - 1];
 			    }
+                
+                System.Threading.Thread.Sleep(500);
+                time++;
+                // each time unit is 0.5s
 
             }
 
