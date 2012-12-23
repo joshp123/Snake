@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace Snake
 {
@@ -74,6 +75,58 @@ namespace Snake
 
         }
 
+        public struct CoordinateVector
+        {
+            Coordinate direction;
+            int magnitude;
+
+            public CoordinateVector(Coordinate direction, int magnitude)
+            {
+                this.magnitude = magnitude;
+                this.direction = direction;
+            }
+
+
+            private void TurnLeft()
+            {
+                if (this.direction.x != -1)
+                {
+                    this.direction.x == -1;
+                    this.direction.y == 0;
+                }
+                return;
+            }
+
+            private void TurnRight()
+            {
+                if (this.direction.x != 1)
+                {
+                    this.direction.x == 1;
+                    this.direction.y == 0;
+                }
+                return;
+            }
+
+            private void TurnUp()
+            {
+                if (this.direction.y != 1)
+                {
+                    this.direction.x == 0;
+                    this.direction.y == 1;
+                }
+            }
+
+            private void TurnDown()
+            {
+                if (this.direction.x != -1)
+                {
+                    this.direction.x == 0;
+                    this.direction.y == -1;
+                }
+            }
+
+        }
+
         internal static Coordinate food = new Coordinate(10,10);
         internal static List<Coordinate> snake = new List<Coordinate>();
         internal static List<Coordinate> walls = new List<Coordinate>();
@@ -92,7 +145,7 @@ namespace Snake
             DrawScreen(walls, snake, food);
 
             // start the snake moving
-            Coordinate motion_direction = new Coordinate(1,0); // start snake moving in the +x direction, w/speed 1
+            CoordinateVector veloctity = new CoordinateVector(1,0); // start snake moving in the +x direction, w/speed 1
             // nb before fucking with speed implement out of bounds checks
             int time = 0;
             // BEWARE OF INT32 WRAPAROUND BUGS HERE LOL
@@ -101,8 +154,18 @@ namespace Snake
             // move snake perpetually unless we break out of loop
             {
                 DrawScreen(walls, snake, food);
+                ConsoleKeyInfo input = Console.ReadKey();
 
-                snake[0] = snake[0] + motion_direction;
+                if (input.Key == ConsoleKey.RightArrow)
+                    velocity.TurnRight();
+                else if (input.Key == ConsoleKey.LeftArrow)
+                    velocity.TurnLeft();
+                else if (input.Key == ConsoleKey.DownArrow)
+                    velocity.TurnDown();
+                else if (input.Key == ConsoleKey.UpArrow)
+                    velocity.TurnUp();
+                
+                snake[0] = snake[0] + (velocity.direction * velocity.magnitude);
                 // if hit wall, break
 
                 // if hit food, eat food, length++ (i.e. new coord at last point) snake.add(snake[snake.length-1]) after rest of snake moves
@@ -113,6 +176,10 @@ namespace Snake
                     // loop backwards along snake moving each coord forward
                     snake[i] = snake[i - 1];
                 }
+
+
+
+
 
                 System.Threading.Thread.Sleep(500);
                 time++;
